@@ -1,6 +1,6 @@
+import dotenv from "dotenv";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: "link-base",
   synchronize: true,
   logging: false,
-  entities: ["src/entity/*.ts"],
+  entities: ["src/entities/*.ts"],
   migrations: [],
   subscribers: [],
 });

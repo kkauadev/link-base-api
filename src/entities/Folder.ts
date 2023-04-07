@@ -1,10 +1,12 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
+  CreateDateColumn,
+  Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Link } from "./Link";
 import { User } from "./User";
@@ -28,4 +30,10 @@ export class Folder {
     cascade: true,
   })
   links: Link[];
+
+  @CreateDateColumn()
+  createDate: Date;
+
+  @UpdateDateColumn()
+  updatedDate: Date;
 }

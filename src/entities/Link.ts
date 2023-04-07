@@ -1,9 +1,11 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
+  CreateDateColumn,
+  Entity,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Folder } from "./Folder";
 
@@ -24,4 +26,10 @@ export class Link {
   @ManyToOne(() => Folder, (folder) => folder.links)
   @JoinColumn({ name: "folder_id" })
   folder: Folder;
+
+  @CreateDateColumn()
+  createDate: Date;
+
+  @UpdateDateColumn()
+  updatedDate: Date;
 }

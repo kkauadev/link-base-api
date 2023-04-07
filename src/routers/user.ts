@@ -1,32 +1,18 @@
-import { Request, Response, Router } from "express";
-import { AppDataSource } from "../data-source";
-import { User } from "../entity/User";
+import { Router } from "express";
+import { UserController } from "../controllers/UserController";
 
 const router = Router();
 
-router.get("/users", async (req: Request, res: Response) => {
-  try {
-    const data = await AppDataSource.manager.find(User, {
-      relations: ["folders", "folders.links"],
-    });
-    res.json({ status: "success", data });
-  } catch (err) {
-    console.log(err);
-  }
-});
+const user = new UserController();
 
-router.post("/create/user", async (req: Request, res: Response) => {
-  try {
-    if (req.body.name) {
-      const newUser = AppDataSource.manager.create(User, {
-        name: req.body.name,
-      });
-      await AppDataSource.manager.save(newUser);
-      res.json({ newUser });
-    }
-  } catch (err) {
-    console.log(err);
-  }
-});
+router.get("/users", user.getAll);
 
-export default router;
+router.get("/users/:id", user.getOne);
+
+router.post("/user/create", user.create);
+
+router.put("/user/update/:id", user.update);
+
+router.delete("/user/delete/:id", user.delete);
+
+export const userRoutes = router;
