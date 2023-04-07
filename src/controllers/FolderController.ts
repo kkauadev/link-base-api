@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { folderRepository } from "../repositories";
+import { CreateService } from "../services/CreateService";
 
 export class FolderController {
   async getAll(req: Request, res: Response) {
@@ -34,22 +35,12 @@ export class FolderController {
   }
 
   async create(req: Request, res: Response) {
-    try {
-      const { id, data } = req.body;
+    const { id, data } = req.body;
+    const createService = new CreateService();
 
-      const createdFolder = folderRepository().create({
-        description: data.description,
-        links: data.links,
-        name: data.name,
-        user: id,
-      });
+    const createdFolder = await createService.folder(id, data);
 
-      await folderRepository().save(createdFolder);
-
-      res.json(createdFolder);
-    } catch (err) {
-      console.log(err);
-    }
+    res.json(createdFolder);
   }
 
   async update(req: Request, res: Response) {

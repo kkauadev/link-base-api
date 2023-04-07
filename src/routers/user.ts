@@ -5,9 +5,9 @@ const router = Router();
 
 const user = new UserController();
 
-router.get("/users", user.getAll);
+router.get("/user", user.getAll);
 
-router.get("/users/:id", user.getOne);
+router.get("/user/:id", user.getOne);
 
 router.post("/user/create", user.create);
 

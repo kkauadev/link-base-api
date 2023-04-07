@@ -3,12 +3,12 @@ import { userRepository } from "../repositories";
 import { CreateService } from "../services/CreateService";
 
 export class UserController {
-  async getAll(res: Response) {
+  async getAll(req: Request, res: Response) {
     try {
       const data = await userRepository().find({
         relations: ["folders", "folders.links"],
       });
-      return res.json({ status: "success", data });
+      return res.status(200).json(data);
     } catch (err) {
       console.log(err);
     }
@@ -17,7 +17,10 @@ export class UserController {
   async getOne(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const result = await userRepository().findOneBy({ id });
+      const result = await userRepository().findOne({
+        where: { id },
+        relations: ["folders", "folders.links"],
+      });
 
       if (!result) {
         return res.status(404).json({ erro: "there is no user with this id" });
@@ -32,23 +35,22 @@ export class UserController {
   async create(req: Request, res: Response) {
     const createService = new CreateService();
 
-    const createdUser = createService.user(req.body.name);
+    if (!req.body.name) {
+      return new Error("there is missing data");
+    }
+    await createService.user({ name: req.body.name });
 
-    return res.json({ "Created user": createdUser });
+    return res.json({ message: "created user", data: req.body });
   }
 
   async update(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { username } = req.body;
+      const { name } = req.body;
 
-      const updatedUser = await userRepository().update(id, { name: username });
+      await userRepository().update(id, { name });
 
-      if (!updatedUser) {
-        console.log(updatedUser);
-      }
-
-      return res.json(updatedUser);
+      return res.json({ data: req.body });
     } catch (err) {
       res.status(400).json({ error: err.message });
     }
@@ -57,14 +59,10 @@ export class UserController {
   async delete(req: Request, res: Response) {
     const { id } = req.params;
 
-    try {
-      const user = await userRepository().findOneBy({ id });
+    const user = await userRepository().findOneBy({ id });
 
-      const removedUser = await userRepository().remove(user);
+    const removedUser = await userRepository().remove(user);
 
-      res.json({ "removed-user": removedUser });
-    } catch (err) {
-      res.status(400).json({ error: err.message });
-    }
+    res.json({ removed: removedUser });
   }
 }
