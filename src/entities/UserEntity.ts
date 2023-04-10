@@ -14,6 +14,9 @@ export class User {
   id: string;
 
   @Column({ nullable: false })
+  password: string;
+
+  @Column({ nullable: false })
   name: string;
 
   @OneToMany(() => Folder, (folder) => folder.user, {

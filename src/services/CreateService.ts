@@ -12,7 +12,7 @@ import { CreateUserData } from "../types/user";
 
 export class CreateService {
   async user(data: CreateUserData): Promise<User> {
-    const newUser = userRepository().create(data);
+    const newUser = userRepository().create({ ...data });
     await userRepository().save(newUser);
 
     return newUser;
