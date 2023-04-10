@@ -9,7 +9,7 @@ router.get("/folders/:user_id", folderController.getAll);
 
 router.get("/folders/:user_id/:id", folderController.getOne);
 
-router.post("/folders/create", folderController.create);
+router.post("/folders/create/:user_id", folderController.create);
 
 router.put("/folders/update/:user_id/:id", folderController.update);
 

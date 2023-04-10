@@ -1,49 +1,53 @@
-import { Folder } from "../entities/Folder";
-import { Link } from "../entities/Link";
-import { User } from "../entities/User";
+import { Folder } from "../entities/FolderEntity";
+import { Link } from "../entities/LinkEntity";
+import { User } from "../entities/UserEntity";
 import {
   folderRepository,
   linkRepository,
   userRepository,
 } from "../repositories";
-
-type Optional<Type> = { [Property in keyof Type]+?: Type[Property] };
+import { CreateFolderData } from "../types/folder";
+import { CreateLinkData } from "../types/link";
+import { CreateUserData } from "../types/user";
 
 export class CreateService {
-  async user(data: Optional<User>) {
-    const newUser = userRepository().create({
-      name: data.name,
-    });
+  async user(data: CreateUserData): Promise<User> {
+    const newUser = userRepository().create(data);
     await userRepository().save(newUser);
+
     return newUser;
   }
 
-  async folder(userId: string, data: Optional<Folder>) {
+  async folder(userId: string, data: CreateFolderData): Promise<Folder> {
     const createdFolder = folderRepository().create({
-      description: data.description,
-      links: data.links,
-      name: data.name,
+      ...data,
       user: {
         id: userId,
       },
     });
 
-    await folderRepository().save(createdFolder);
+    try {
+      await folderRepository().save(createdFolder);
+    } catch (err) {
+      throw new Error("erro on save data, please repeat again");
+    }
 
     return createdFolder;
   }
 
-  async link(folderId: string, data: Optional<Link>) {
+  async link(folderId: string, data: CreateLinkData): Promise<Link> {
     const createdLink = linkRepository().create({
-      title: data.title,
-      link: data.link,
-      description: data.description,
+      ...data,
       folder: {
         id: folderId,
       },
     });
 
-    await linkRepository().save(createdLink);
+    try {
+      await linkRepository().save(createdLink);
+    } catch (err) {
+      throw new Error("erro on save data, please repeat again");
+    }
 
     return createdLink;
   }

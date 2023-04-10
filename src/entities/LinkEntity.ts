@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Folder } from "./Folder";
+import { Folder } from "./FolderEntity";
 
 @Entity()
 export class Link {

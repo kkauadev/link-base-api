@@ -2,24 +2,34 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Folder } from "./Folder";
+import { Link } from "./LinkEntity";
+import { User } from "./UserEntity";
 
 @Entity()
-export class User {
+export class Folder {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
   name: string;
 
-  @OneToMany(() => Folder, (folder) => folder.user, {
+  @Column()
+  description: string;
+
+  @ManyToOne(() => User, (user) => user.folders)
+  @JoinColumn({ name: "user_id" })
+  user: User;
+
+  @OneToMany(() => Link, (link) => link.folder, {
     cascade: true,
   })
-  folders: Folder[];
+  links: Link[];
 
   @CreateDateColumn()
   createDate: Date;

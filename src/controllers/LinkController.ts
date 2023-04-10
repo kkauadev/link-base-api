@@ -1,61 +1,85 @@
 import { Request, Response } from "express";
-import { linkRepository } from "../repositories";
+import { TypeORMError } from "typeorm";
+import { CreateService } from "../services/CreateService";
+import { DeleteService } from "../services/DeleteService";
+import { ReadService } from "../services/ReadService";
+import { UpdateService } from "../services/UpdateService";
+import { CreateLinkData, UpdateLinkData } from "../types/link";
 
 export class LinkController {
-  async getAll(req: Request, res: Response) {
-    const { folder_id: folderId } = req.params;
+  async getAll(req: Request<{ folder_id: string }>, res: Response) {
+    try {
+      const { folder_id: id } = req.params;
 
-    const links = linkRepository().findBy({ folder: { id: folderId } });
+      const readService = new ReadService();
+      const result = await readService.oneUser(id);
 
-    res.json({ links });
-  }
-
-  async getOne(req: Request, res: Response) {
-    const { id } = req.params;
-
-    const link = linkRepository().findOneBy({ id });
-
-    res.json({ link });
-  }
-
-  async create(req: Request, res: Response) {
-    const { folder_id } = req.params;
-    const { data } = req.body;
-
-    const link = await linkRepository().findOneBy({ id: data.id });
-
-    if (link) {
-      return res.status(401).json({ erro: "link already exists" });
+      res.json({ result });
+    } catch (err) {
+      return res.status(400).json({ erro: err.message });
     }
-
-    const createdLink = await linkRepository().create({
-      description: data.description,
-      link: data.link,
-      title: data.title,
-      folder: { id: folder_id },
-    });
-
-    await linkRepository().save(createdLink);
-
-    res.json({ createdLink });
   }
 
-  async delete(req: Request, res: Response) {
-    const { id } = req.params;
+  async getOne(req: Request<{ id: string }>, res: Response) {
+    try {
+      const { id } = req.params;
 
-    const link = await linkRepository().findOneBy({ id });
+      const readService = new ReadService();
+      const result = await readService.oneUser(id);
 
-    const removedLink = await linkRepository().remove(link);
-
-    res.json(removedLink);
+      res.json({ result });
+    } catch (err) {
+      if (err instanceof TypeORMError) {
+        console.log("Typeorm error");
+      }
+      return res.status(400).json({ erro: err.message });
+    }
   }
 
-  async update(req: Request, res: Response) {
-    const { id } = req.params;
-    const { data } = req.body;
+  async create(
+    req: Request<{ folder_id: string }, any, CreateLinkData>,
+    res: Response
+  ) {
+    try {
+      const { folder_id } = req.params;
+      const data = req.body;
 
-    const updatedLink = await linkRepository().update(id, data);
+      const createService = new CreateService();
+      const createdUser = await createService.link(folder_id, data);
 
-    return res.json(updatedLink);
+      res.json({ createdUser });
+    } catch (err) {
+      return res.status(400).json({ erro: err.message });
+    }
+  }
+
+  async delete(req: Request<{ id: string }>, res: Response) {
+    try {
+      const { id } = req.params;
+
+      const deleteService = new DeleteService();
+      const deletedLink = await deleteService.link(id);
+
+      res.json(deletedLink);
+    } catch (err) {
+      return res.status(400).json({ erro: err.message });
+    }
+  }
+
+  async update(
+    req: Request<{ id: string }, any, UpdateLinkData>,
+    res: Response
+  ) {
+    try {
+      const { id } = req.params;
+      const data = req.body;
+
+      const updateService = new UpdateService();
+      const updatedLink = await updateService.link(id, data);
+
+      return res.json({ updatedLink });
+    } catch (err) {
+      return res.status(400).json({ erro: err.message });
+    }
   }
 }

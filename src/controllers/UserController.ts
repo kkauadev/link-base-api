@@ -1,29 +1,31 @@
 import { Request, Response } from "express";
-import { userRepository } from "../repositories";
 import { CreateService } from "../services/CreateService";
+import { DeleteService } from "../services/DeleteService";
+import { ReadService } from "../services/ReadService";
+import { UpdateService } from "../services/UpdateService";
+import { CreateUserData, UpdateUserData } from "../types/user";
 
 export class UserController {
   async getAll(req: Request, res: Response) {
     try {
-      const data = await userRepository().find({
-        relations: ["folders", "folders.links"],
-      });
-      return res.status(200).json(data);
+      const readService = new ReadService();
+      const result = await readService.allUser();
+
+      return res.status(200).json({ result });
     } catch (err) {
-      console.log(err);
+      return res.status(400).json({ erro: err.message });
     }
   }
 
   async getOne(req: Request, res: Response) {
-    const { id } = req.params;
     try {
-      const result = await userRepository().findOne({
-        where: { id },
-        relations: ["folders", "folders.links"],
-      });
+      const { id } = req.params;
+
+      const readService = new ReadService();
+      const result = await readService.oneUser(id);
 
       if (!result) {
-        return res.status(404).json({ erro: "there is no user with this id" });
+        throw new Error("there is no user with this id");
       }
 
       return res.json(result);
@@ -32,37 +34,43 @@ export class UserController {
     }
   }
 
-  async create(req: Request, res: Response) {
-    const createService = new CreateService();
+  async create(req: Request<any, any, CreateUserData>, res: Response) {
+    try {
+      const createService = new CreateService();
+      const newUser = await createService.user(req.body);
 
-    if (!req.body.name) {
-      return new Error("there is missing data");
+      return res.status(201).json({ message: "created user", data: newUser });
+    } catch (err) {
+      return res.status(400).json({ erro: err.message });
     }
-    await createService.user({ name: req.body.name });
-
-    return res.json({ message: "created user", data: req.body });
   }
 
-  async update(req: Request, res: Response) {
+  async update(
+    req: Request<{ id: string }, any, UpdateUserData>,
+    res: Response
+  ) {
     try {
       const { id } = req.params;
-      const { name } = req.body;
 
-      await userRepository().update(id, { name });
+      const updateService = new UpdateService();
+      const updatedData = await updateService.user(id, req.body);
 
-      return res.json({ data: req.body });
+      return res.json({ message: "User updated", data: updatedData });
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      return res.status(400).json({ erro: err.message });
     }
   }
 
-  async delete(req: Request, res: Response) {
-    const { id } = req.params;
+  async delete(req: Request<{ id: string }>, res: Response) {
+    try {
+      const { id } = req.params;
 
-    const user = await userRepository().findOneBy({ id });
+      const deleteService = new DeleteService();
+      const deletedUser = await deleteService.user(id);
 
-    const removedUser = await userRepository().remove(user);
-
-    res.json({ removed: removedUser });
+      res.json({ deleted: "success", data: deletedUser });
+    } catch (err) {
+      return res.status(400).json({ erro: err.message });
+    }
   }
 }
