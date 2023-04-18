@@ -20,9 +20,8 @@ export class DeleteService {
     return user;
   }
 
-  async folder(userId: string, folderId: string): Promise<Folder | Error> {
+  async folder(folderId: string): Promise<Folder | Error> {
     const folder = await folderRepository().findOneBy({
-      user: { id: userId },
       id: folderId,
     });
 
@@ -30,7 +29,8 @@ export class DeleteService {
       return new Error("Folder don't exist");
     }
 
-    await folderRepository().delete(folder);
+    await folderRepository().delete(folderId);
+    console.log(await folderRepository().delete(folderId));
 
     return folder;
   }

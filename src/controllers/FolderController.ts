@@ -34,7 +34,7 @@ export class FolderController {
       }
 
       const readService = new ReadService();
-      const result = await readService.oneFolder(id);
+      const result = await readService.oneFolder(id, userId);
 
       if (!result) {
         throw new Error("there is no folder with this id");
@@ -88,12 +88,12 @@ export class FolderController {
     }
   }
 
-  async delete(req: Request<{ user_id: string; id: string }>, res: Response) {
+  async delete(req: Request<{ id: string }>, res: Response) {
     try {
-      const { user_id, id } = req.params;
+      const { id } = req.params;
 
       const deleteService = new DeleteService();
-      const deletedFolder = await deleteService.folder(user_id, id);
+      const deletedFolder = await deleteService.folder(id);
 
       return res.json({ deleted: "success", data: deletedFolder });
     } catch (err) {

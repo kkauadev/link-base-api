@@ -7,3 +7,5 @@ const router = Router();
 router.post("/login", new LoginController().getToken);
 
 router.post("/logout", new LogoutController().deleteToken);
+
+export const authenticationRouter = router;

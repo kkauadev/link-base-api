@@ -31,7 +31,7 @@ router.put(
 );
 
 router.delete(
-  "/folders/delete/:user_id/:id",
+  "/folders/delete/:id",
   verifyAuthentication(),
   folderController.delete
 );

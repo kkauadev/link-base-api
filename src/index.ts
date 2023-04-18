@@ -5,6 +5,7 @@ import { AppDataSource } from "./data-source";
 import { folderRouter } from "./routers/folder";
 import { linkRouter } from "./routers/link";
 import { userRoutes } from "./routers/user";
+import { authenticationRouter } from "./routers/authentication";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 
+app.use(authenticationRouter);
 app.use(userRoutes);
 app.use(folderRouter);
 app.use(linkRouter);
