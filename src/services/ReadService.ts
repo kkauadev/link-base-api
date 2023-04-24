@@ -17,6 +17,14 @@ export class ReadService {
     return data;
   }
 
+  async oneUserWithName(username: string): Promise<User | undefined> {
+    const data = await userRepository().findOne({
+      where: { name: username },
+    });
+
+    return data;
+  }
+
   async oneFolder(
     folderId: string,
     userId: string

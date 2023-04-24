@@ -4,6 +4,7 @@ import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
 import { CreateUserData, UpdateUserData } from "../types/user";
+import bcrypt from "bcrypt";
 
 export class UserController {
   async getAll(req: Request, res: Response) {
@@ -36,12 +37,36 @@ export class UserController {
 
   async create(req: Request<any, any, CreateUserData>, res: Response) {
     try {
-      const createService = new CreateService();
-      const newUser = await createService.user(req.body);
+      const { password, name } = req.body;
 
-      return res.status(201).json({ message: "created user", data: newUser });
+      if (!password || !name) {
+        return res.status(400).json({
+          error: "Missing required fields",
+          format: { name: "string", password: "string" },
+        });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const readService = new ReadService();
+      const userExists = await readService.oneUserWithName(name);
+
+      if (userExists) {
+        return res.status(400).json({ error: "User already exists" });
+      }
+
+      const createService = new CreateService();
+      const { name: createdName, id: createdId } = await createService.user({
+        ...req.body,
+        password: hashedPassword,
+      });
+
+      return res
+        .status(201)
+        .json({ message: "created user", data: { createdName, createdId } });
     } catch (err) {
-      return res.status(400).json({ erro: "saofkakofdoaf" + err.message });
+      return res.status(400).json({ erro: err.message });
     }
   }
 
@@ -51,6 +76,14 @@ export class UserController {
   ) {
     try {
       const { id } = req.params;
+      const { name } = req.body;
+
+      if (!name) {
+        return res.status(400).json({
+          error: "Missing required fields",
+          format: { name: "string" },
+        });
+      }
 
       const updateService = new UpdateService();
       const updatedData = await updateService.user(id, req.body);

@@ -42,10 +42,21 @@ export class LinkController {
   ) {
     try {
       const { folder_id } = req.params;
-      const data = req.body;
+      const { title, description, link } = req.body;
+
+      if (!title || !description || !link) {
+        return res.status(400).json({
+          error: "some mandatory data was not passed",
+          format: { title: "string", description: "string", link: "string" },
+        });
+      }
 
       const createService = new CreateService();
-      const createdUser = await createService.link(folder_id, data);
+      const createdUser = await createService.link(folder_id, {
+        title,
+        description,
+        link,
+      });
 
       res.json({ createdUser });
     } catch (err) {
@@ -72,10 +83,21 @@ export class LinkController {
   ) {
     try {
       const { id } = req.params;
-      const data = req.body;
+      const { title, description, link } = req.body;
+
+      if (!title && !description && !link) {
+        return res.json({
+          error: "missing data to update",
+          format: { title: "string", description: "string", link: "string" },
+        });
+      }
 
       const updateService = new UpdateService();
-      const updatedLink = await updateService.link(id, data);
+      const updatedLink = await updateService.link(id, {
+        title,
+        description,
+        link,
+      });
 
       return res.json({ updatedLink });
     } catch (err) {

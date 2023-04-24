@@ -30,7 +30,9 @@ export class FolderController {
       const { user_id: userId, id } = req.params;
 
       if (!userId || !id || userId.length != 36 || id.length != 36) {
-        throw new Error("some mandatory data was not passed");
+        return res
+          .status(400)
+          .json({ error: "some mandatory data was not passed" });
       }
 
       const readService = new ReadService();
@@ -52,16 +54,22 @@ export class FolderController {
   ) {
     try {
       const { user_id: userId } = req.params;
-      const data = req.body;
+      const { name, description } = req.body;
 
-      if (!userId || userId.length != 36 || !data) {
-        throw new Error("some mandatory data was not passed");
+      if (!name || !description) {
+        return res.status(400).json({
+          error: "Missing required fields",
+          format: { name: "string", description: "string" },
+        });
       }
 
       const createService = new CreateService();
-      const createdFolder = await createService.folder(userId, data);
+      const createdFolder = await createService.folder(userId, {
+        name,
+        description,
+      });
 
-      res.json(createdFolder);
+      return res.json(createdFolder);
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }
@@ -73,16 +81,22 @@ export class FolderController {
   ) {
     try {
       const { user_id: userId, id } = req.params;
-      const data = req.body;
+      const { name, description } = req.body;
 
-      if (!userId || userId.length != 36 || !id || id.length != 36 || !data) {
-        throw new Error("some mandatory data was not passed");
+      if (!name || !description) {
+        return res.status(400).json({
+          error: "Missing required fields",
+          format: { name: "string", description: "string" },
+        });
       }
 
       const updateService = new UpdateService();
-      const updatedFolder = await updateService.folder(userId, id, data);
+      const updatedFolder = await updateService.folder(userId, id, {
+        name,
+        description,
+      });
 
-      res.json({ updatedFolder });
+      return res.json({ updatedFolder });
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }

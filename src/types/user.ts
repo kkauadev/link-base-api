@@ -6,5 +6,5 @@ export type CreateUserData = Optional<
 >;
 
 export type UpdateUserData = Optional<
-  Omit<User, "updatedDate" | "createDate" | "folders" | "id">
+  Omit<User, "updatedDate" | "createDate" | "folders" | "id" | "password">
 >;
