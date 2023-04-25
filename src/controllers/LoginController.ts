@@ -1,7 +1,7 @@
+import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { userRepository } from "../repositories";
-import bcrypt from "bcrypt";
 
 export class LoginController {
   async getToken(
@@ -9,21 +9,34 @@ export class LoginController {
     res: Response
   ) {
     try {
-      const user = await userRepository().findOneBy({
-        name: req.body.username,
+      const { username, password } = req.body;
+
+      if (!username || !password)
+        return res.status(401).json({
+          error: "Invalid credentials",
+          auth: false,
+          format: { username: "string", password: "string" },
+        });
+
+      const user = await userRepository().findOne({
+        where: {
+          name: username,
+        },
       });
 
       if (!user) {
-        return res.status(401).json({ error: "Invalid credentials" });
+        return res.status(401).json({
+          error: "Invalid credentials",
+          auth: false,
+          format: { username: "string", password: "string" },
+          data: { username, password },
+        });
       }
 
-      const passwordMatch = await bcrypt.compare(
-        user.password,
-        req.body.password
-      );
+      const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (!passwordMatch) {
-        return res.status(401).json({ error: "Invalid credentials" });
+        return res.status(401).json({ error: "Invalid credentialsaa" });
       }
 
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
@@ -31,7 +44,7 @@ export class LoginController {
       });
       return res.json({ auth: true, token, id: user.id });
     } catch (err) {
-      return res.status(401).end();
+      return res.sendStatus(401);
     }
   }
 }

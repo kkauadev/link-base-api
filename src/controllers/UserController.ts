@@ -1,10 +1,10 @@
+import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import { CreateService } from "../services/CreateService";
 import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
 import { CreateUserData, UpdateUserData } from "../types/user";
-import bcrypt from "bcrypt";
 
 export class UserController {
   async getAll(req: Request, res: Response) {
