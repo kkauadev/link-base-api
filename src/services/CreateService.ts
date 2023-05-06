@@ -19,20 +19,18 @@ export class CreateService {
   }
 
   async folder(userId: string, data: CreateFolderData): Promise<Folder> {
-    const createdFolder = folderRepository().create({
-      ...data,
-      user: {
-        id: userId,
-      },
-    });
-
     try {
+      const createdFolder = folderRepository().create({
+        ...data,
+        user: {
+          id: userId,
+        },
+      });
       await folderRepository().save(createdFolder);
+      return createdFolder;
     } catch (err) {
       throw new Error("erro on save data, please repeat again");
     }
-
-    return createdFolder;
   }
 
   async link(folderId: string, data: CreateLinkData): Promise<Link> {

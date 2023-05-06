@@ -15,7 +15,7 @@ export class DeleteService {
       return new Error("User don't exist");
     }
 
-    await userRepository().remove(user);
+    await userRepository().delete({ id: userId, folders: user.folders });
 
     return user;
   }
@@ -29,13 +29,12 @@ export class DeleteService {
       return new Error("Folder don't exist");
     }
 
-    await folderRepository().delete(folderId);
-    console.log(await folderRepository().delete(folderId));
+    await folderRepository().delete({ id: folderId });
 
     return folder;
   }
 
-  async link(linkId: string): Promise<Link | Error> {
+  async link(linkId: string): Promise<string | Error> {
     const link = await linkRepository().findOneBy({
       id: linkId,
     });
@@ -44,8 +43,8 @@ export class DeleteService {
       return new Error("Link don't exist");
     }
 
-    await linkRepository().delete(link);
+    await linkRepository().delete({ id: linkId });
 
-    return link;
+    return linkId;
   }
 }

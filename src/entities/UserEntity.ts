@@ -21,6 +21,7 @@ export class User {
 
   @OneToMany(() => Folder, (folder) => folder.user, {
     cascade: true,
+    onDelete: "CASCADE",
   })
   folders: Folder[];
 

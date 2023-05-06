@@ -25,9 +25,9 @@ export class LinkController {
       const { id } = req.params;
 
       const readService = new ReadService();
-      const result = await readService.oneUser(id);
+      const result = await readService.oneLink(id);
 
-      res.json({ result });
+      return res.json({ ...result });
     } catch (err) {
       if (err instanceof TypeORMError) {
         console.log("Typeorm error");

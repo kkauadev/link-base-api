@@ -15,7 +15,7 @@ export class FolderController {
       }
 
       const readService = new ReadService();
-      const result = readService.allFolders(userId);
+      const result = await readService.allFolders(userId);
 
       if (!result) throw new Error("don't exists any folder");
 
@@ -27,22 +27,22 @@ export class FolderController {
 
   async getOne(req: Request, res: Response) {
     try {
-      const { user_id: userId, id } = req.params;
+      const { id } = req.params;
 
-      if (!userId || !id || userId.length != 36 || id.length != 36) {
+      if (!id || id.length != 36) {
         return res
           .status(400)
           .json({ error: "some mandatory data was not passed" });
       }
 
       const readService = new ReadService();
-      const result = await readService.oneFolder(id, userId);
+      const result = await readService.oneFolder(id);
 
       if (!result) {
         throw new Error("there is no folder with this id");
       }
 
-      return res.json({ result });
+      return res.json({ ...result });
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }
@@ -76,11 +76,11 @@ export class FolderController {
   }
 
   async update(
-    req: Request<{ user_id: string; id: string }, any, UpdateFolderData>,
+    req: Request<{ id: string }, any, UpdateFolderData>,
     res: Response
   ) {
     try {
-      const { user_id: userId, id } = req.params;
+      const { id } = req.params;
       const { name, description } = req.body;
 
       if (!name || !description) {
@@ -91,7 +91,7 @@ export class FolderController {
       }
 
       const updateService = new UpdateService();
-      const updatedFolder = await updateService.folder(userId, id, {
+      const updatedFolder = await updateService.folder(id, {
         name,
         description,
       });

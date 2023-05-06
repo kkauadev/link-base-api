@@ -23,7 +23,7 @@ export class Link {
   @Column()
   link: string;
 
-  @ManyToOne(() => Folder, (folder) => folder.links)
+  @ManyToOne(() => Folder, (folder) => folder.links, { onDelete: "CASCADE" })
   @JoinColumn({ name: "folder_id" })
   folder: Folder;
 

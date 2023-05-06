@@ -22,12 +22,13 @@ export class Folder {
   @Column()
   description: string;
 
-  @ManyToOne(() => User, (user) => user.folders)
+  @ManyToOne(() => User, (user) => user.folders, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user: User;
 
   @OneToMany(() => Link, (link) => link.folder, {
     cascade: true,
+    onDelete: "CASCADE",
   })
   links: Link[];
 
