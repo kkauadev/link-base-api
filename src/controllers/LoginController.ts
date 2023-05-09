@@ -44,7 +44,7 @@ export class LoginController {
       });
       return res.json({ auth: true, token, id: user.id });
     } catch (err) {
-      return res.sendStatus(401);
+      return res.status(401).json(err);
     }
   }
 }
