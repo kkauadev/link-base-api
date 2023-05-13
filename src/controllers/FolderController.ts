@@ -4,6 +4,7 @@ import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
 import { CreateFolderData, UpdateFolderData } from "../types/folder";
+import { createFolderSchema } from "../schemas/UserSchema";
 
 export class FolderController {
   async getAll(req: Request, res: Response) {
@@ -54,14 +55,7 @@ export class FolderController {
   ) {
     try {
       const { user_id: userId } = req.params;
-      const { name, description } = req.body;
-
-      if (!name || !description) {
-        return res.status(400).json({
-          error: "Missing required fields",
-          format: { name: "string", description: "string" },
-        });
-      }
+      const { name, description } = createFolderSchema.parse(req.body);
 
       const createService = new CreateService();
       const createdFolder = await createService.folder(userId, {
@@ -81,14 +75,7 @@ export class FolderController {
   ) {
     try {
       const { id } = req.params;
-      const { name, description } = req.body;
-
-      if (!name || !description) {
-        return res.status(400).json({
-          error: "Missing required fields",
-          format: { name: "string", description: "string" },
-        });
-      }
+      const { name, description } = createFolderSchema.parse(req.body);
 
       const updateService = new UpdateService();
       const updatedFolder = await updateService.folder(id, {

@@ -13,7 +13,7 @@ export class LoginController {
 
       if (!username || !password)
         return res.status(401).json({
-          error: "Invalid credentials",
+          error: "A value is missing",
           auth: false,
           format: { username: "string", password: "string" },
         });

@@ -5,6 +5,7 @@ import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
 import { CreateUserData, UpdateUserData } from "../types/user";
+import { createUserSchema } from "../schemas/UserSchema";
 
 export class UserController {
   async getAll(req: Request, res: Response) {
@@ -37,14 +38,7 @@ export class UserController {
 
   async create(req: Request<any, any, CreateUserData>, res: Response) {
     try {
-      const { password, name } = req.body;
-
-      if (!password || !name) {
-        return res.status(400).json({
-          error: "Missing required fields",
-          format: { name: "string", password: "string" },
-        });
-      }
+      const { password, name } = createUserSchema.parse(req.body);
 
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);

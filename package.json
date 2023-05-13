@@ -20,7 +20,8 @@
     "nodemon": "^2.0.22",
     "pg": "^8.4.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.14"
+    "typeorm": "^0.3.14",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
