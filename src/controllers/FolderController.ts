@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
+import { createFolderSchema } from "../schemas/UserSchema";
 import { CreateService } from "../services/CreateService";
 import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
 import { CreateFolderData, UpdateFolderData } from "../types/folder";
-import { createFolderSchema } from "../schemas/UserSchema";
 
 export class FolderController {
   async getAll(req: Request, res: Response) {
@@ -63,7 +63,7 @@ export class FolderController {
         description,
       });
 
-      return res.json(createdFolder);
+      return res.json({ createdFolder });
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }
@@ -96,7 +96,7 @@ export class FolderController {
       const deleteService = new DeleteService();
       const deletedFolder = await deleteService.folder(id);
 
-      return res.json({ deleted: "success", data: deletedFolder });
+      return res.json({ deletedFolder });
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }

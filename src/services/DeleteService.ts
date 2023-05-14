@@ -1,5 +1,4 @@
 import { Folder } from "../entities/FolderEntity";
-import { Link } from "../entities/LinkEntity";
 import { User } from "../entities/UserEntity";
 import {
   folderRepository,

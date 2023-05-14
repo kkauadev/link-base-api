@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import { createUserSchema } from "../schemas/UserSchema";
 import { CreateService } from "../services/CreateService";
 import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
 import { CreateUserData, UpdateUserData } from "../types/user";
-import { createUserSchema } from "../schemas/UserSchema";
 
 export class UserController {
   async getAll(req: Request, res: Response) {
@@ -30,7 +30,7 @@ export class UserController {
         throw new Error("there is no user with this id");
       }
 
-      return res.json(result);
+      return res.json({ result });
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }
@@ -56,9 +56,7 @@ export class UserController {
         password: hashedPassword,
       });
 
-      return res
-        .status(201)
-        .json({ message: "created user", data: { createdName, createdId } });
+      return res.status(201).json({ createdName, createdId });
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }
@@ -82,7 +80,7 @@ export class UserController {
       const updateService = new UpdateService();
       const updatedData = await updateService.user(id, req.body);
 
-      return res.json({ message: "User updated", data: updatedData });
+      return res.json({ updatedData });
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }
@@ -95,7 +93,7 @@ export class UserController {
       const deleteService = new DeleteService();
       const deletedUser = await deleteService.user(id);
 
-      res.json({ deleted: "success", data: deletedUser });
+      res.json({ deletedUser });
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }

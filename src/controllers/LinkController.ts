@@ -71,7 +71,7 @@ export class LinkController {
       const deleteService = new DeleteService();
       const deletedLink = await deleteService.link(id);
 
-      res.json(deletedLink);
+      res.json({ deletedLink });
     } catch (err) {
       return res.status(400).json({ erro: err.message });
     }
