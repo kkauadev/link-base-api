@@ -38,13 +38,16 @@ export class LoginController {
       if (!passwordMatch) {
         return res.status(401).json({ error: "Invalid credentialsaa" });
       }
-
+      if (!process.env.JWT_SECRET_KEY) {
+        throw new Error("JWT_SECRET_KEY not found in .env file");
+      }
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
         expiresIn: 30000,
       });
       return res.json({ auth: true, token, id: user.id });
     } catch (err) {
-      return res.status(401).json(err);
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(401).json({ erro: errorMessage });
     }
   }
 }

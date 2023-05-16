@@ -6,6 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  Relation,
 } from "typeorm";
 import { Folder } from "./FolderEntity";
 
@@ -25,7 +26,7 @@ export class Link {
 
   @ManyToOne(() => Folder, (folder) => folder.links, { onDelete: "CASCADE" })
   @JoinColumn({ name: "folder_id" })
-  folder: Folder;
+  folder: Relation<Folder>;
 
   @CreateDateColumn()
   createDate: Date;

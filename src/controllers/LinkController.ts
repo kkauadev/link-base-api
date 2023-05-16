@@ -14,9 +14,10 @@ export class LinkController {
       const readService = new ReadService();
       const result = await readService.oneUser(id);
 
-      res.json({ result });
+      res.json({ ...result });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 
@@ -32,7 +33,8 @@ export class LinkController {
       if (err instanceof TypeORMError) {
         console.log("Typeorm error");
       }
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 
@@ -58,9 +60,10 @@ export class LinkController {
         link,
       });
 
-      res.json({ createdUser });
+      res.json({ ...createdUser });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 
@@ -73,7 +76,8 @@ export class LinkController {
 
       res.json({ deletedLink });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 
@@ -99,9 +103,10 @@ export class LinkController {
         link,
       });
 
-      return res.json({ updatedLink });
+      return res.json({ ...updatedLink });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 }

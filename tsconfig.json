@@ -1,13 +1,31 @@
 {
+  "extends": "ts-node/node16/tsconfig.json",
+
+  "ts-node": {
+    "transpileOnly": true,
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
   "compilerOptions": {
-    "lib": ["es5", "es6"],
-    "target": "es5",
-    "module": "commonjs",
+    "module": "CommonJS",
+    "lib": ["ESNext"],
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
-    "outDir": "./build",
+    "rootDir": "src",
+    "outDir": "build",
+    "strictPropertyInitialization": false,
+    "forceConsistentCasingInFileNames": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true,
-    "esModuleInterop": true
-  }
+    "resolveJsonModule": true,
+    "baseUrl": "src",
+    "paths": {
+      "*": ["src/*"]
+    },
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

@@ -13,9 +13,10 @@ export class UserController {
       const readService = new ReadService();
       const result = await readService.allUser();
 
-      return res.status(200).json({ result });
+      return res.status(200).json({ ...result });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(401).json({ erro: errorMessage });
     }
   }
 
@@ -30,9 +31,10 @@ export class UserController {
         throw new Error("there is no user with this id");
       }
 
-      return res.json({ result });
+      return res.json({ ...result });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(401).json({ erro: errorMessage });
     }
   }
 
@@ -58,7 +60,8 @@ export class UserController {
 
       return res.status(201).json({ createdName, createdId });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(401).json({ erro: errorMessage });
     }
   }
 
@@ -80,9 +83,10 @@ export class UserController {
       const updateService = new UpdateService();
       const updatedData = await updateService.user(id, req.body);
 
-      return res.json({ updatedData });
+      return res.json({ ...updatedData });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(401).json({ erro: errorMessage });
     }
   }
 
@@ -93,9 +97,10 @@ export class UserController {
       const deleteService = new DeleteService();
       const deletedUser = await deleteService.user(id);
 
-      res.json({ deletedUser });
+      res.json({ ...deletedUser });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(401).json({ erro: errorMessage });
     }
   }
 }

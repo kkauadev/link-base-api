@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  Relation,
 } from "typeorm";
 import { Link } from "./LinkEntity";
 import { User } from "./UserEntity";
@@ -30,7 +31,7 @@ export class Folder {
     cascade: true,
     onDelete: "CASCADE",
   })
-  links: Link[];
+  links: Relation<Link>[];
 
   @CreateDateColumn()
   createDate: Date;

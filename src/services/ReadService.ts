@@ -8,7 +8,7 @@ import {
 } from "../repositories";
 
 export class ReadService {
-  async oneUser(userId: string): Promise<User | undefined> {
+  async oneUser(userId: string): Promise<User | null> {
     const data = await userRepository().findOne({
       where: { id: userId },
       relations: ["folders", "folders.links"],
@@ -17,7 +17,7 @@ export class ReadService {
     return data;
   }
 
-  async oneUserWithName(username: string): Promise<User | undefined> {
+  async oneUserWithName(username: string): Promise<User | null> {
     const data = await userRepository().findOne({
       where: { name: username },
     });
@@ -25,7 +25,7 @@ export class ReadService {
     return data;
   }
 
-  async oneFolder(folderId: string): Promise<Folder | undefined> {
+  async oneFolder(folderId: string): Promise<Folder | null> {
     const data = await folderRepository().findOne({
       where: { id: folderId },
       relations: ["links"],
@@ -34,20 +34,20 @@ export class ReadService {
     return data;
   }
 
-  async oneLink(linkId: string): Promise<Link | undefined> {
+  async oneLink(linkId: string): Promise<Link | null> {
     const data = await linkRepository().findOneBy({ id: linkId });
 
     return data;
   }
 
-  async allUser(): Promise<User[] | undefined> {
+  async allUser(): Promise<User[] | null> {
     const data = userRepository().find({
       relations: ["folders", "folders.links"],
     });
 
     return data;
   }
-  async allFolders(userId: string): Promise<Folder[] | undefined> {
+  async allFolders(userId: string): Promise<Folder[] | null> {
     const data = await folderRepository().find({
       relations: ["links"],
       where: { user: { id: userId } },
@@ -55,7 +55,7 @@ export class ReadService {
 
     return data;
   }
-  async allLinks(linkId: string): Promise<Link[] | undefined> {
+  async allLinks(linkId: string): Promise<Link[] | null> {
     const data = linkRepository().findBy({ folder: { id: linkId } });
 
     return data;

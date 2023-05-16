@@ -20,11 +20,12 @@ export const verifyAuthentication = () => {
     const [, token] = authHeaders.split(" ");
 
     try {
+      if (!process.env.JWT_SECRET_KEY) {
+        throw new Error("JWT_SECRET_KEY is not defined");
+      }
       const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const { id } = data as TokenPayload;
-
       req.params.userId = id;
-
       return next();
     } catch (err) {
       return res.sendStatus(401);

@@ -20,9 +20,10 @@ export class FolderController {
 
       if (!result) throw new Error("don't exists any folder");
 
-      return res.json({ result });
+      return res.json({ ...result });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 
@@ -45,7 +46,8 @@ export class FolderController {
 
       return res.json({ ...result });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 
@@ -63,9 +65,10 @@ export class FolderController {
         description,
       });
 
-      return res.json({ createdFolder });
+      return res.json({ ...createdFolder });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 
@@ -83,9 +86,10 @@ export class FolderController {
         description,
       });
 
-      return res.json({ updatedFolder });
+      return res.json({ ...updatedFolder });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 
@@ -96,9 +100,10 @@ export class FolderController {
       const deleteService = new DeleteService();
       const deletedFolder = await deleteService.folder(id);
 
-      return res.json({ deletedFolder });
+      return res.json({ ...deletedFolder });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(400).json({ erro: errorMessage });
     }
   }
 }
