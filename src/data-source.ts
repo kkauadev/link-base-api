@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
   username: "link_base_pg_user",
   password: process.env.PASSWORD_DB,
   database: "link_base_pg",
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: ["src/entities/*.ts", "build/entities/*.js"],
   migrations: ["src/migration/*.ts", "build/migration/*.js"],

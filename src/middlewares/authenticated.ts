@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
@@ -6,6 +7,8 @@ interface TokenPayload {
   iat: number;
   exp: number;
 }
+
+dotenv.config();
 
 export const verifyAuthentication = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
