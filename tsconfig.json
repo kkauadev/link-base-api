@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "rootDir": "src",
-    "outDir": "build",
+    "outDir": "dist",
     "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
     "emitDecoratorMetadata": true,

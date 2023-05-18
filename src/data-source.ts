@@ -8,7 +8,7 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL ?? undefined,
   type: "postgres",
   username: "link_base_pg_user",
-  password: process.env.PASSWORD_DB,
+  password: "oCVBkce4udRRzDd23DQN60MbBGYIrJi7",
   synchronize: false,
   logging: false,
   entities: ["src/entities/*.ts", "build/entities/*.js"],
