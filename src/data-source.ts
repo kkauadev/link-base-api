@@ -5,6 +5,7 @@ import { DataSource } from "typeorm";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
+  url: process.env.DATABASE_URL ?? undefined,
   type: "postgres",
   host: process.env.HOST_DB,
   port: Number(process.env.PORT_DB),
@@ -15,5 +16,4 @@ export const AppDataSource = new DataSource({
   logging: false,
   entities: ["src/entities/*.ts"],
   migrations: ["src/migration/*.ts"],
-  subscribers: [],
 });
