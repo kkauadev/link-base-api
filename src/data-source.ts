@@ -5,11 +5,13 @@ import { DataSource } from "typeorm";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
-  url: "postgres://link_base_pg_user:oCVBkce4udRRzDd23DQN60MbBGYIrJi7@dpg-chgoq0jhp8u065orfhp0-a/link_base_pg",
   type: "postgres",
-  username: "link_base_pg_user",
-  password: "oCVBkce4udRRzDd23DQN60MbBGYIrJi7",
-  synchronize: false,
+  port: Number(process.env.DB_PORT),
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  synchronize: true,
   logging: false,
   entities: ["src/entities/*.ts", "build/entities/*.js"],
   migrations: ["src/migration/*.ts", "build/migration/*.js"],
