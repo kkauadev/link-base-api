@@ -21,7 +21,6 @@ const options: DataSourceOptions =
         database: process.env.DB_NAME && process.env.DB_NAME,
         synchronize: true,
         logging: true,
-        ssl: true,
         entities: [User, Folder, Link],
         migrations: ["src/migration/*.ts", "dist/migration/*.js"],
       }

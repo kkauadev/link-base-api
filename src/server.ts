@@ -30,10 +30,9 @@ const connect = async () => {
     console.log("error connecting to database");
   }
 };
-// AppDataSource.initialize().then(() => console.log("Connect to database"));
 
 connect();
 
 app.listen(process.env.PORT_SERVER || 3333, () =>
-  console.log("running on port " + process.env.PORT || 3333)
+  console.log("running on port " + process.env.PORT_SERVER || 3333)
 );
