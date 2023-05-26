@@ -24,9 +24,9 @@ export class User {
   })
   folders: Folder[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamp" })
   createDate: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "timestamp" })
   updatedDate: Date;
 }

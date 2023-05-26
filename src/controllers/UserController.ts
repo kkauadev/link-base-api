@@ -5,6 +5,9 @@ import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
 import { CreateUserData, UpdateUserData } from "../types/user";
+import { userRepository } from "../repositories";
+import { AppDataSource } from "../data-source";
+import { User } from "../entities/UserEntity";
 
 export class UserController {
   async getAll(req: Request, res: Response) {
@@ -14,7 +17,7 @@ export class UserController {
 
       return res.status(200).json({ result });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -31,7 +34,7 @@ export class UserController {
 
       return res.json(result);
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -49,24 +52,18 @@ export class UserController {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const readService = new ReadService();
-      const userExists = await readService.oneUserWithName(name);
-
-      if (userExists) {
-        return res.status(400).json({ error: "User already exists" });
-      }
-
       const createService = new CreateService();
-      const { name: createdName, id: createdId } = await createService.user({
-        ...req.body,
+
+      const userCreated = await createService.user({
+        name,
         password: hashedPassword,
       });
 
       return res
         .status(201)
-        .json({ message: "created user", data: { createdName, createdId } });
+        .json({ message: "created user", data: userCreated });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -90,7 +87,7 @@ export class UserController {
 
       return res.json({ message: "User updated", data: updatedData });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -103,7 +100,7 @@ export class UserController {
 
       res.json({ deleted: "success", data: deletedUser });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 }

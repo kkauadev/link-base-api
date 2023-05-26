@@ -16,7 +16,7 @@ export class LinkController {
 
       res.json({ result });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -32,7 +32,7 @@ export class LinkController {
       if (err instanceof TypeORMError) {
         console.log("Typeorm error");
       }
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -60,7 +60,7 @@ export class LinkController {
 
       res.json({ createdUser });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -73,7 +73,7 @@ export class LinkController {
 
       res.json(deletedLink);
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -101,7 +101,7 @@ export class LinkController {
 
       return res.json({ updatedLink });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 }

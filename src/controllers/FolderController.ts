@@ -21,7 +21,7 @@ export class FolderController {
 
       return res.json({ result });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -44,7 +44,7 @@ export class FolderController {
 
       return res.json({ result });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -71,7 +71,7 @@ export class FolderController {
 
       return res.json(createdFolder);
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -98,7 +98,7 @@ export class FolderController {
 
       return res.json({ updatedFolder });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 
@@ -111,7 +111,7 @@ export class FolderController {
 
       return res.json({ deleted: "success", data: deletedFolder });
     } catch (err) {
-      return res.status(400).json({ erro: err.message });
+      return res.status(400).json({ erro: err });
     }
   }
 }

@@ -20,6 +20,7 @@ export const verifyAuthentication = () => {
     const [, token] = authHeaders.split(" ");
 
     try {
+      if (!process.env.JWT_SECRET_KEY) return res.sendStatus(500);
       const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const { id } = data as TokenPayload;
 

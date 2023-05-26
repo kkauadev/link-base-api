@@ -10,6 +10,7 @@ export class LoginController {
   ) {
     try {
       const { username, password } = req.body;
+      console.log(req.body);
 
       if (!username || !password)
         return res.status(401).json({
@@ -38,6 +39,8 @@ export class LoginController {
       if (!passwordMatch) {
         return res.status(401).json({ error: "Invalid credentialsaa" });
       }
+
+      if (!process.env.JWT_SECRET_KEY) return res.sendStatus(500);
 
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
         expiresIn: 30000,

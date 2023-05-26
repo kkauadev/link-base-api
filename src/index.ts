@@ -21,7 +21,18 @@ app.use(userRoutes);
 app.use(folderRouter);
 app.use(linkRouter);
 
-AppDataSource.initialize().then(() => console.log("Connect to database"));
+const connect = async () => {
+  try {
+    await AppDataSource.initialize();
+    console.log("Connect to database");
+  } catch (error) {
+    console.log(error);
+    console.log("error connecting to database");
+  }
+};
+// AppDataSource.initialize().then(() => console.log("Connect to database"));
+
+connect();
 
 app.listen(process.env.PORT_SERVER, () =>
   console.log("running on port " + process.env.PORT_SERVER)
