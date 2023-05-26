@@ -34,6 +34,6 @@ const connect = async () => {
 
 connect();
 
-app.listen(process.env.PORT || 3333, () =>
+app.listen(process.env.PORT_SERVER || 3333, () =>
   console.log("running on port " + process.env.PORT || 3333)
 );
