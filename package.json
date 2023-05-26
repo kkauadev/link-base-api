@@ -18,7 +18,8 @@
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.11.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.4.0-alpha.1"
+    "typeorm": "^0.4.0-alpha.1",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
