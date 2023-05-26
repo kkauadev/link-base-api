@@ -1,7 +1,5 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Router } from "express";
 import { UserController } from "../controllers/UserController";
-import { userRepository } from "../repositories";
-import jwt from "jsonwebtoken";
 import { verifyAuthentication } from "../middlewares/authenticated";
 
 const router = Router();

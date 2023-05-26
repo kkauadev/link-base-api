@@ -12,11 +12,7 @@ router.get(
   folderController.getAll
 );
 
-router.get(
-  "/folders/:user_id/:id",
-  verifyAuthentication(),
-  folderController.getOne
-);
+router.get("/folder/:id", verifyAuthentication(), folderController.getOne);
 
 router.post(
   "/folders/create/:user_id",
@@ -25,7 +21,7 @@ router.post(
 );
 
 router.put(
-  "/folders/update/:user_id/:id",
+  "/folders/update/:id",
   verifyAuthentication(),
   folderController.update
 );

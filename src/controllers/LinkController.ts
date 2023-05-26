@@ -14,7 +14,7 @@ export class LinkController {
       const readService = new ReadService();
       const result = await readService.oneUser(id);
 
-      res.json({ result });
+      res.json({ ...result });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }
@@ -25,9 +25,9 @@ export class LinkController {
       const { id } = req.params;
 
       const readService = new ReadService();
-      const result = await readService.oneUser(id);
+      const result = await readService.oneLink(id);
 
-      res.json({ result });
+      return res.json({ ...result });
     } catch (err) {
       if (err instanceof TypeORMError) {
         console.log("Typeorm error");
@@ -58,7 +58,7 @@ export class LinkController {
         link,
       });
 
-      res.json({ createdUser });
+      res.json({ ...createdUser });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }
@@ -71,7 +71,7 @@ export class LinkController {
       const deleteService = new DeleteService();
       const deletedLink = await deleteService.link(id);
 
-      res.json(deletedLink);
+      res.json({ deletedLink });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }
@@ -99,7 +99,7 @@ export class LinkController {
         link,
       });
 
-      return res.json({ updatedLink });
+      return res.json({ ...updatedLink });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }

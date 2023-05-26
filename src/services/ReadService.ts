@@ -28,9 +28,9 @@ export class ReadService {
     return data;
   }
 
-  async oneFolder(folderId: string, userId: string): Promise<Folder | null> {
+  async oneFolder(folderId: string): Promise<Folder | null> {
     const data = await folderRepository().findOne({
-      where: { id: folderId, user: { id: userId } },
+      where: { id: folderId },
       relations: ["links"],
     });
 

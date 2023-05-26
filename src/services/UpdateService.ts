@@ -18,14 +18,10 @@ export class UpdateService {
   }
 
   async folder(
-    userId: string,
     folderId: string,
     data: UpdateFolderData
   ): Promise<UpdateFolderData | undefined> {
-    await folderRepository().update(
-      { user: { id: userId }, id: folderId },
-      data
-    );
+    await folderRepository().update({ id: folderId }, data);
     return data;
   }
 

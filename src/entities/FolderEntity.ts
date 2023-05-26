@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   Relation,
   UpdateDateColumn,
+  Relation,
 } from "typeorm";
 import { Link } from "./LinkEntity";
 import { User } from "./UserEntity";

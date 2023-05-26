@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   Relation,
   UpdateDateColumn,
+  Relation,
 } from "typeorm";
 import { Folder } from "./FolderEntity";
 

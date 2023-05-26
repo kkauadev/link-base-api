@@ -6,7 +6,11 @@ const router = Router();
 
 const linkController = new LinkController();
 
-router.get("/links/:folder_id", verifyAuthentication(), linkController.getAll);
+router.get(
+  "/linksall/:folder_id",
+  verifyAuthentication(),
+  linkController.getAll
+);
 
 router.get("/links/:id", verifyAuthentication(), linkController.getOne);
 
@@ -16,14 +20,10 @@ router.post(
   linkController.create
 );
 
-router.put(
-  "/links/update/:folder_id/:id",
-  verifyAuthentication(),
-  linkController.update
-);
+router.put("/links/update/:id", verifyAuthentication(), linkController.update);
 
 router.delete(
-  "/links/delete/:folder_id/:id",
+  "/links/delete/:id",
   verifyAuthentication(),
   linkController.delete
 );

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { createFolderSchema } from "../schemas/UserSchema";
 import { CreateService } from "../services/CreateService";
 import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
@@ -15,11 +16,11 @@ export class FolderController {
       }
 
       const readService = new ReadService();
-      const result = readService.allFolders(userId);
+      const result = await readService.allFolders(userId);
 
       if (!result) throw new Error("don't exists any folder");
 
-      return res.json({ result });
+      return res.json({ ...result });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }
@@ -27,22 +28,22 @@ export class FolderController {
 
   async getOne(req: Request, res: Response) {
     try {
-      const { user_id: userId, id } = req.params;
+      const { id } = req.params;
 
-      if (!userId || !id || userId.length != 36 || id.length != 36) {
+      if (!id || id.length != 36) {
         return res
           .status(400)
           .json({ error: "some mandatory data was not passed" });
       }
 
       const readService = new ReadService();
-      const result = await readService.oneFolder(id, userId);
+      const result = await readService.oneFolder(id);
 
       if (!result) {
         throw new Error("there is no folder with this id");
       }
 
-      return res.json({ result });
+      return res.json({ ...result });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }
@@ -54,14 +55,7 @@ export class FolderController {
   ) {
     try {
       const { user_id: userId } = req.params;
-      const { name, description } = req.body;
-
-      if (!name || !description) {
-        return res.status(400).json({
-          error: "Missing required fields",
-          format: { name: "string", description: "string" },
-        });
-      }
+      const { name, description } = createFolderSchema.parse(req.body);
 
       const createService = new CreateService();
       const createdFolder = await createService.folder(userId, {
@@ -69,34 +63,27 @@ export class FolderController {
         description,
       });
 
-      return res.json(createdFolder);
+      return res.json({ ...createdFolder });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }
   }
 
   async update(
-    req: Request<{ user_id: string; id: string }, any, UpdateFolderData>,
+    req: Request<{ id: string }, any, UpdateFolderData>,
     res: Response
   ) {
     try {
-      const { user_id: userId, id } = req.params;
-      const { name, description } = req.body;
-
-      if (!name || !description) {
-        return res.status(400).json({
-          error: "Missing required fields",
-          format: { name: "string", description: "string" },
-        });
-      }
+      const { id } = req.params;
+      const { name, description } = createFolderSchema.parse(req.body);
 
       const updateService = new UpdateService();
-      const updatedFolder = await updateService.folder(userId, id, {
+      const updatedFolder = await updateService.folder(id, {
         name,
         description,
       });
 
-      return res.json({ updatedFolder });
+      return res.json({ ...updatedFolder });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }
@@ -109,7 +96,7 @@ export class FolderController {
       const deleteService = new DeleteService();
       const deletedFolder = await deleteService.folder(id);
 
-      return res.json({ deleted: "success", data: deletedFolder });
+      return res.json({ ...deletedFolder });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }

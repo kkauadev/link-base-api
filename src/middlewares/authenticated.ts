@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
@@ -6,6 +7,8 @@ interface TokenPayload {
   iat: number;
   exp: number;
 }
+
+dotenv.config();
 
 export const verifyAuthentication = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -23,9 +26,7 @@ export const verifyAuthentication = () => {
       if (!process.env.JWT_SECRET_KEY) return res.sendStatus(500);
       const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const { id } = data as TokenPayload;
-
       req.params.userId = id;
-
       return next();
     } catch (err) {
       return res.sendStatus(401);

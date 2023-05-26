@@ -14,7 +14,7 @@ export class LoginController {
 
       if (!username || !password)
         return res.status(401).json({
-          error: "Invalid credentials",
+          error: "A value is missing",
           auth: false,
           format: { username: "string", password: "string" },
         });
@@ -47,7 +47,8 @@ export class LoginController {
       });
       return res.json({ auth: true, token, id: user.id });
     } catch (err) {
-      return res.sendStatus(401);
+      const errorMessage = err instanceof Error ? err.message : "unknown error";
+      return res.status(401).json({ erro: errorMessage });
     }
   }
 }
