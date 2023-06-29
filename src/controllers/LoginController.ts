@@ -3,6 +3,12 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { userRepository } from "../repositories";
 
+interface TokenPayload {
+  id: string;
+  iat: number;
+  exp: number;
+}
+
 export class LoginController {
   async getToken(
     req: Request<any, any, { username: string; password: string }>,
@@ -49,6 +55,29 @@ export class LoginController {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "unknown error";
       return res.status(401).json({ erro: errorMessage });
+    }
+  }
+
+  async verifyToken(req: Request, res: Response) {
+    const authHeaders = req.headers.authorization;
+
+    if (!authHeaders) {
+      return res.status(401).json({
+        erro: "token is missing",
+      });
+    }
+
+    const [, token] = authHeaders.split(" ");
+
+    try {
+      if (!process.env.JWT_SECRET_KEY) return res.sendStatus(500);
+      const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const { id } = data as TokenPayload;
+      req.params.userId = id;
+
+      return res.sendStatus(200);
+    } catch (err) {
+      return res.sendStatus(401);
     }
   }
 }

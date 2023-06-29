@@ -22,7 +22,6 @@ const options: DataSourceOptions =
         synchronize: true,
         logging: true,
         entities: [User, Folder, Link],
-        migrations: ["src/migration/*.ts", "dist/migration/*.js"],
       }
     : {
         type: "postgres",
@@ -33,7 +32,6 @@ const options: DataSourceOptions =
         database: process.env.DB_NAME || "link-base",
         synchronize: true,
         entities: [User, Folder, Link],
-        migrations: ["src/migration/*.ts", "dist/migration/*.js"],
       };
 
 export const AppDataSource = new DataSource(options);
