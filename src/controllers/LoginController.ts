@@ -14,9 +14,10 @@ export class LoginController {
     req: Request<any, any, { username: string; password: string }>,
     res: Response
   ) {
+    const expiresInOneWeek = "1w";
+
     try {
       const { username, password } = req.body;
-      console.log(req.body);
 
       if (!username || !password)
         return res.status(401).json({
@@ -49,7 +50,7 @@ export class LoginController {
       if (!process.env.JWT_SECRET_KEY) return res.sendStatus(500);
 
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
-        expiresIn: 30000,
+        expiresIn: expiresInOneWeek,
       });
       return res.json({ auth: true, token, id: user.id });
     } catch (err) {
