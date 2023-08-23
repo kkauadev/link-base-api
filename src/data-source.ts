@@ -13,12 +13,10 @@ const options: DataSourceOptions =
   environment === "production"
     ? {
         type: "postgres",
-        host: process.env.DB_HOST && process.env.DB_HOST,
-        url: process.env.DB_URL && process.env.DB_URL,
+        host: process.env.DB_HOST,
+        url: process.env.DB_URL,
         port: 5432,
-        username: process.env.USERNAME_DB && process.env.USERNAME_DB,
-        password: process.env.DB_PASSWORD && process.env.DB_PASSWORD,
-        database: process.env.DB_NAME && process.env.DB_NAME,
+        database: process.env.DB_NAME,
         synchronize: true,
         logging: true,
         entities: [User, Folder, Link],
