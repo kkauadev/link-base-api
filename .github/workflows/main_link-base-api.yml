@@ -58,5 +58,5 @@ jobs:
         with:
           app-name: 'link-base-api'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_949C4E14FAE54311AF28FD5EB5639E40 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C96AF44E1B7940F29021F9EE7874C984 }}
           package: .
