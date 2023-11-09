@@ -20,6 +20,14 @@ export class ReadService {
     }
   }
 
+  async userExists(username: string): Promise<boolean> {
+    const data = await userRepository().findOne({
+      where: { name: username },
+    });
+
+    return !!data;
+  }
+
   async oneUserWithName(username: string): Promise<User | null> {
     const data = await userRepository().findOne({
       where: { name: username },

@@ -1,19 +1,18 @@
+import { FolderDTO, LinkDTO, UserDTO } from "../dtos";
 import { Folder } from "../entities/FolderEntity";
 import { Link } from "../entities/LinkEntity";
-import { User } from "../entities/UserEntity";
 import {
   folderRepository,
   linkRepository,
   userRepository,
 } from "../repositories";
-import { CreateFolderData } from "../types/folder";
-import { CreateLinkData } from "../types/link";
-import { CreateUserData } from "../types/user";
 
 export class CreateService {
-  async user(data: CreateUserData): Promise<CreateUserData> {
+  async user(data: UserDTO): Promise<UserDTO> {
     try {
-      const existUser = await userRepository().findOneBy({ name: data.name });
+      const existUser = await userRepository().findOneBy({
+        name: data.username,
+      });
 
       if (existUser) {
         throw new Error("user already exists");
@@ -28,7 +27,7 @@ export class CreateService {
     }
   }
 
-  async folder(userId: string, data: CreateFolderData): Promise<Folder> {
+  async folder(userId: string, data: FolderDTO): Promise<Folder> {
     try {
       const createdFolder = folderRepository().create({
         ...data,
@@ -43,7 +42,7 @@ export class CreateService {
     }
   }
 
-  async link(folderId: string, data: CreateLinkData): Promise<Link> {
+  async link(folderId: string, data: LinkDTO): Promise<Link> {
     const createdLink = linkRepository().create({
       ...data,
       folder: {

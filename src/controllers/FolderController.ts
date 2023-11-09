@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import { createFolderSchema } from "../schemas/UserSchema";
 import { CreateService } from "../services/CreateService";
 import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
-import { CreateFolderData, UpdateFolderData } from "../types/folder";
+import { FolderDTO } from "../dtos";
 
 export class FolderController {
   async getAll(req: Request, res: Response) {
@@ -50,12 +49,16 @@ export class FolderController {
   }
 
   async create(
-    req: Request<{ user_id: string }, any, CreateFolderData>,
+    req: Request<{ user_id: string }, any, FolderDTO>,
     res: Response
   ) {
     try {
       const { user_id: userId } = req.params;
-      const { name, description } = createFolderSchema.parse(req.body);
+      const { name, description } = req.body;
+
+      if (!name || !description) {
+        throw new Error("some mandatory data was not passed");
+      }
 
       const createService = new CreateService();
       const createdFolder = await createService.folder(userId, {
@@ -69,13 +72,14 @@ export class FolderController {
     }
   }
 
-  async update(
-    req: Request<{ id: string }, any, UpdateFolderData>,
-    res: Response
-  ) {
+  async update(req: Request<{ id: string }, any, FolderDTO>, res: Response) {
     try {
       const { id } = req.params;
-      const { name, description } = createFolderSchema.parse(req.body);
+      const { name, description } = req.body;
+
+      if (!name || !description) {
+        throw new Error("some mandatory data was not passed");
+      }
 
       const updateService = new UpdateService();
       const updatedFolder = await updateService.folder(id, {

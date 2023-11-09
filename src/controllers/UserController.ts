@@ -1,11 +1,12 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import { createUserSchema } from "../schemas/UserSchema";
 import { CreateService } from "../services/CreateService";
 import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
-import { CreateUserData, UpdateUserData } from "../types/user";
+import { errorMessages, userErrorMessages } from "../constants/error-messages";
+import { StatusCodes } from "http-status-codes";
+import { UserDTO } from "../dtos";
 
 export class UserController {
   async getAll(req: Request, res: Response) {
@@ -13,9 +14,11 @@ export class UserController {
       const readService = new ReadService();
       const result = await readService.allUser();
 
-      return res.status(200).json({ ...result });
+      return res.status(StatusCodes.OK).json({ ...result });
     } catch (err) {
-      return res.status(400).json({ erro: err });
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ erro: userErrorMessages.BAD_REQUEST });
     }
   }
 
@@ -32,41 +35,55 @@ export class UserController {
 
       return res.json({ ...result });
     } catch (err) {
-      return res.status(400).json({ erro: err });
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ erro: userErrorMessages.BAD_REQUEST });
     }
   }
 
-  async create(req: Request<any, any, CreateUserData>, res: Response) {
+  async create(req: Request<any, any, UserDTO>, res: Response) {
     try {
-      const { password, name } = createUserSchema.parse(req.body);
+      const { username, password } = req.body;
+
+      if (!username || !password) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          error: errorMessages.MISSING_REQUIRED_FIELDS,
+        });
+      }
 
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const createService = new CreateService();
+      const readService = new ReadService();
+      const usersExists = await readService.userExists(username);
+      if (usersExists) {
+        return res
+          .status(StatusCodes.CONFLICT)
+          .json({ error: userErrorMessages.USER_ALREADY_EXISTS });
+      }
 
+      const createService = new CreateService();
       const userCreated = await createService.user({
-        name,
+        username,
         password: hashedPassword,
       });
 
       return res
-        .status(201)
+        .status(StatusCodes.CREATED)
         .json({ message: "created user", data: userCreated });
     } catch (err) {
-      return res.status(400).json({ erro: err });
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: userErrorMessages.BAD_REQUEST });
     }
   }
 
-  async update(
-    req: Request<{ id: string }, any, UpdateUserData>,
-    res: Response
-  ) {
+  async update(req: Request<{ id: string }, any, UserDTO>, res: Response) {
     try {
       const { id } = req.params;
-      const { name } = req.body;
+      const { username } = req.body;
 
-      if (!name) {
+      if (!username) {
         return res.status(400).json({
           error: "Missing required fields",
           format: { name: "string" },

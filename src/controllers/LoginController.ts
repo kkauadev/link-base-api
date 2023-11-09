@@ -32,7 +32,8 @@ export class LoginController {
         },
       });
 
-      if (!user) {
+      if (user === null) {
+        console.log("user", user);
         return res.status(401).json({
           error: "Invalid credentials",
           auth: false,
@@ -44,6 +45,7 @@ export class LoginController {
       const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (!passwordMatch) {
+        console.log("password", passwordMatch);
         return res.status(401).json({ error: "Invalid credentialsaa" });
       }
 

@@ -19,6 +19,15 @@ export class User {
   @Column({ nullable: false })
   name: string;
 
+  // @Column({ nullable: false, unique: true })
+  // username: string;
+
+  // @Column({ nullable: false, unique: true })
+  // email: string;
+
+  // @Column({ nullable: true })
+  // bio: string;
+
   @OneToMany(() => Folder, (folder) => folder.user, {
     cascade: true,
     onDelete: "CASCADE",

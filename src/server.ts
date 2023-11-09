@@ -21,6 +21,10 @@ app.use(userRoutes);
 app.use(folderRouter);
 app.use(linkRouter);
 
+app.get("/", (req, res) => {
+  res.sendFile("public/index.html", { root: __dirname });
+});
+
 const connect = async () => {
   try {
     await AppDataSource.initialize();
@@ -28,11 +32,33 @@ const connect = async () => {
   } catch (error) {
     console.log(error);
     console.log("error connecting to database");
+    AppDataSource.destroy();
   }
 };
 
 connect();
 
-app.listen(process.env.PORT_SERVER || 3333, () =>
+const server = app.listen(process.env.PORT_SERVER || 3333, () =>
   console.log("running on port " + process.env.PORT_SERVER || 3333)
 );
+
+// process.on("exit", () => {
+//   console.log("API shutting down...");
+//   AppDataSource.destroy();
+// });
+
+// process.on("SIGINT", () => {
+//   console.log("API server received SIGINT signal");
+//   server.close(() => {
+//     console.log("Server is closed");
+//     process.exit(0);
+//   });
+// });
+
+// process.on("SIGTERM", () => {
+//   console.log("API server received SIGTERM signal");
+//   server.close(() => {
+//     console.log("Server is closed");
+//     process.exit(0);
+//   });
+// });

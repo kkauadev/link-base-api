@@ -4,7 +4,7 @@ import { CreateService } from "../services/CreateService";
 import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
-import { CreateLinkData, UpdateLinkData } from "../types/link";
+import { LinkDTO } from "../dtos";
 
 export class LinkController {
   async getAll(req: Request<{ folder_id: string }>, res: Response) {
@@ -37,7 +37,7 @@ export class LinkController {
   }
 
   async create(
-    req: Request<{ folder_id: string }, any, CreateLinkData>,
+    req: Request<{ folder_id: string }, any, LinkDTO>,
     res: Response
   ) {
     try {
@@ -77,10 +77,7 @@ export class LinkController {
     }
   }
 
-  async update(
-    req: Request<{ id: string }, any, UpdateLinkData>,
-    res: Response
-  ) {
+  async update(req: Request<{ id: string }, any, LinkDTO>, res: Response) {
     try {
       const { id } = req.params;
       const { title, description, link } = req.body;
