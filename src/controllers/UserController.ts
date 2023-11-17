@@ -43,7 +43,7 @@ export class UserController {
 
   async create(req: Request<any, any, UserDTO>, res: Response) {
     try {
-      const { username, password } = req.body;
+      const { username, password, email, name } = req.body;
 
       if (!username || !password) {
         return res.status(StatusCodes.BAD_REQUEST).json({
@@ -56,6 +56,7 @@ export class UserController {
 
       const readService = new ReadService();
       const usersExists = await readService.userExists(username);
+
       if (usersExists) {
         return res
           .status(StatusCodes.CONFLICT)
@@ -63,9 +64,12 @@ export class UserController {
       }
 
       const createService = new CreateService();
+
       const userCreated = await createService.user({
         username,
         password: hashedPassword,
+        email,
+        name,
       });
 
       return res
