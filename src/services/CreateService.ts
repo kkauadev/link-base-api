@@ -27,6 +27,12 @@ export class CreateService {
     }
   }
 
+  async bio(userId: string, data: string): Promise<string> {
+    await userRepository().update({ id: userId }, { bio: data });
+
+    return data;
+  }
+
   async folder(userId: string, data: FolderDTO): Promise<Folder> {
     try {
       const createdFolder = folderRepository().create({

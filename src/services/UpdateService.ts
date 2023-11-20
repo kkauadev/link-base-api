@@ -12,6 +12,12 @@ export class UpdateService {
     return data;
   }
 
+  async bio(userId: string, data: string): Promise<string | undefined> {
+    await userRepository().update({ id: userId }, { bio: data });
+
+    return data;
+  }
+
   async folder(
     folderId: string,
     data: FolderDTO

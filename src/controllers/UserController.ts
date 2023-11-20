@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { errorMessages, userErrorMessages } from "../constants/error-messages";
+import { UserDTO } from "../dtos";
 import { CreateService } from "../services/CreateService";
 import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
-import { errorMessages, userErrorMessages } from "../constants/error-messages";
-import { StatusCodes } from "http-status-codes";
-import { UserDTO } from "../dtos";
 
 export class UserController {
   async getAll(req: Request, res: Response) {
@@ -111,6 +111,34 @@ export class UserController {
       const deletedUser = await deleteService.user(id);
 
       res.json({ ...deletedUser });
+    } catch (err) {
+      return res.status(400).json({ erro: err });
+    }
+  }
+
+  async createBio(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { bio } = req.body;
+
+      const createService = new CreateService();
+      const createdBio = await createService.bio(id, bio);
+
+      return res.json({ data: createdBio });
+    } catch (err) {
+      return res.status(400).json({ erro: err });
+    }
+  }
+
+  async updateBio(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { bio } = req.body;
+
+      const updateService = new UpdateService();
+      const updatedData = await updateService.bio(id, bio);
+
+      return res.json({ data: updatedData });
     } catch (err) {
       return res.status(400).json({ erro: err });
     }

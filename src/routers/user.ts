@@ -16,4 +16,8 @@ router.put("/user/update/:id", verifyAuthentication(), user.update);
 
 router.delete("/user/delete/:id", verifyAuthentication(), user.delete);
 
+router.post("/user/bio/:id", verifyAuthentication(), user.createBio);
+
+router.patch("/user/bio/:id", verifyAuthentication(), user.updateBio);
+
 export const userRoutes = router;
