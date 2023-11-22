@@ -1,108 +1,98 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import { FolderDTO } from "../dtos";
+import Error from "../helpers/api-errors";
 import { CreateService } from "../services/CreateService";
 import { DeleteService } from "../services/DeleteService";
 import { ReadService } from "../services/ReadService";
 import { UpdateService } from "../services/UpdateService";
-import { FolderDTO } from "../dtos";
 
 export class FolderController {
-  async getAll(req: Request, res: Response) {
-    try {
-      const { user_id: userId } = req.params;
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    const { user_id: userId } = req.params;
 
-      if (!userId || userId.length != 36) {
-        throw new Error("some mandatory data was not passed");
-      }
-
-      const readService = new ReadService();
-      const result = await readService.allFolders(userId);
-
-      if (!result) throw new Error("don't exists any folder");
-
-      return res.json({ ...result });
-    } catch (err) {
-      return res.status(400).json({ erro: err });
+    if (!userId || userId.length != 36) {
+      return next(new Error.BadRequest("some mandatory data was not passed"));
     }
+
+    const readService = new ReadService();
+    const result = await readService.allFolders(userId);
+
+    if (!result) {
+      return next(new Error.NotFound("don't exists any folder"));
+    }
+
+    return res.json({ ...result });
   }
 
-  async getOne(req: Request, res: Response) {
-    try {
-      const { id } = req.params;
+  async getOne(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
 
-      if (!id || id.length != 36) {
-        return res
-          .status(400)
-          .json({ error: "some mandatory data was not passed" });
-      }
-
-      const readService = new ReadService();
-      const result = await readService.oneFolder(id);
-
-      if (!result) {
-        throw new Error("there is no folder with this id");
-      }
-
-      return res.json({ ...result });
-    } catch (err) {
-      return res.status(400).json({ erro: err });
+    if (!id || id.length != 36) {
+      return next(new Error.BadRequest("some mandatory data was not passed"));
     }
+
+    const readService = new ReadService();
+    const result = await readService.oneFolder(id);
+
+    if (!result) {
+      return next(new Error.NotFound("don't exists any folder"));
+    }
+
+    return res.json({ ...result });
   }
 
   async create(
     req: Request<{ user_id: string }, any, FolderDTO>,
-    res: Response
+    res: Response,
+    next: NextFunction
   ) {
-    try {
-      const { user_id: userId } = req.params;
-      const { name, description } = req.body;
+    const { user_id: userId } = req.params;
+    const { name, description } = req.body;
 
-      if (!name || !description) {
-        throw new Error("some mandatory data was not passed");
-      }
-
-      const createService = new CreateService();
-      const createdFolder = await createService.folder(userId, {
-        name,
-        description,
-      });
-
-      return res.json({ ...createdFolder });
-    } catch (err) {
-      return res.status(400).json({ erro: err });
+    if (!name || !description) {
+      return next(new Error.BadRequest("some mandatory data was not passed"));
     }
+
+    const createService = new CreateService();
+    const createdFolder = await createService.folder(userId, {
+      name,
+      description,
+    });
+
+    return res.json({ ...createdFolder });
   }
 
-  async update(req: Request<{ id: string }, any, FolderDTO>, res: Response) {
-    try {
-      const { id } = req.params;
-      const { name, description } = req.body;
+  async update(
+    req: Request<{ id: string }, any, FolderDTO>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { id } = req.params;
+    const { name, description } = req.body;
 
-      if (!name || !description) {
-        throw new Error("some mandatory data was not passed");
-      }
-
-      const updateService = new UpdateService();
-      const updatedFolder = await updateService.folder(id, {
-        name,
-        description,
-      });
-
-      return res.json({ ...updatedFolder });
-    } catch (err) {
-      return res.status(400).json({ erro: err });
+    if (!name || !description) {
+      return next(new Error.BadRequest("some mandatory data was not passed"));
     }
+
+    const updateService = new UpdateService();
+    const updatedFolder = await updateService.folder(id, {
+      name,
+      description,
+    });
+
+    return res.json({ ...updatedFolder });
   }
 
-  async delete(req: Request<{ id: string }>, res: Response) {
-    try {
-      const { id } = req.params;
+  async delete(
+    req: Request<{ id: string }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { id } = req.params;
 
-      const deleteService = new DeleteService();
-      const deletedFolder = await deleteService.folder(id);
+    const deleteService = new DeleteService();
+    const deletedFolder = await deleteService.folder(id);
 
-      return res.json({ ...deletedFolder });
-    } catch (err) {
-      return res.status(400).json({ erro: err });
-    }
+    return res.json({ ...deletedFolder });
   }
 }

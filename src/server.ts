@@ -6,6 +6,7 @@ import { authenticationRouter } from "./routers/authentication";
 import { folderRouter } from "./routers/folder";
 import { linkRouter } from "./routers/link";
 import { userRoutes } from "./routers/user";
+import { errorMiddleware } from "./middlewares/error";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(authenticationRouter);
 app.use(userRoutes);
 app.use(folderRouter);
 app.use(linkRouter);
+app.use(errorMiddleware);
 
 app.get("/", (req, res) => {
   res.sendFile("public/index.html", { root: __dirname });
@@ -42,23 +44,23 @@ const server = app.listen(process.env.PORT_SERVER || 3333, () =>
   console.log("running on port " + process.env.PORT_SERVER || 3333)
 );
 
-// process.on("exit", () => {
-//   console.log("API shutting down...");
-//   AppDataSource.destroy();
-// });
+process.on("exit", () => {
+  console.log("API shutting down...");
+  AppDataSource.destroy();
+});
 
-// process.on("SIGINT", () => {
-//   console.log("API server received SIGINT signal");
-//   server.close(() => {
-//     console.log("Server is closed");
-//     process.exit(0);
-//   });
-// });
+process.on("SIGINT", () => {
+  console.log("API server received SIGINT signal");
+  server.close(() => {
+    console.log("Server is closed");
+    process.exit(0);
+  });
+});
 
-// process.on("SIGTERM", () => {
-//   console.log("API server received SIGTERM signal");
-//   server.close(() => {
-//     console.log("Server is closed");
-//     process.exit(0);
-//   });
-// });
+process.on("SIGTERM", () => {
+  console.log("API server received SIGTERM signal");
+  server.close(() => {
+    console.log("Server is closed");
+    process.exit(0);
+  });
+});

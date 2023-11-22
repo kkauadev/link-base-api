@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import Error from "../helpers/api-errors";
 import { userRepository } from "../repositories";
 
 interface TokenPayload {
@@ -12,62 +13,48 @@ interface TokenPayload {
 export class LoginController {
   async getToken(
     req: Request<any, any, { username: string; password: string }>,
-    res: Response
+    res: Response,
+    next: NextFunction
   ) {
     const expiresInOneWeek = "1w";
 
-    try {
-      const { username, password } = req.body;
+    const { username, password } = req.body;
 
-      if (!username || !password)
-        return res.status(401).json({
-          error: "A value is missing",
-          auth: false,
-          format: { username: "string", password: "string" },
-        });
-
-      const user = await userRepository().findOne({
-        where: {
-          name: username,
-        },
-      });
-
-      if (user === null) {
-        console.log("user", user);
-        return res.status(401).json({
-          error: "Invalid credentials",
-          auth: false,
-          format: { username: "string", password: "string" },
-          data: { username, password },
-        });
-      }
-
-      const passwordMatch = await bcrypt.compare(password, user.password);
-
-      if (!passwordMatch) {
-        console.log("password", passwordMatch);
-        return res.status(401).json({ error: "Invalid credentialsaa" });
-      }
-
-      if (!process.env.JWT_SECRET_KEY) return res.sendStatus(500);
-
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
-        expiresIn: expiresInOneWeek,
-      });
-      return res.json({ auth: true, token, id: user.id });
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "unknown error";
-      return res.status(401).json({ erro: errorMessage });
+    if (!username || !password) {
+      return next(new Error.BadRequest("Missing required fields"));
     }
+
+    const user = await userRepository().findOne({
+      where: {
+        name: username,
+      },
+    });
+
+    if (user === null) {
+      return next(new Error.Unauthorized("Invalid credentials"));
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return next(new Error.Unauthorized("Invalid credentials"));
+    }
+
+    if (!process.env.JWT_SECRET_KEY) {
+      return next(new Error.Unauthorized("Internal server error"));
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: expiresInOneWeek,
+    });
+    return res.json({ auth: true, token, id: user.id });
   }
 
-  async verifyToken(req: Request, res: Response) {
+  async verifyToken(req: Request, res: Response, next: NextFunction) {
     const authHeaders = req.headers.authorization;
 
     if (!authHeaders) {
-      return res.status(401).json({
-        erro: "token is missing",
-      });
+      return next(new Error.Unauthorized("token is missing"));
     }
 
     const [, token] = authHeaders.split(" ");
