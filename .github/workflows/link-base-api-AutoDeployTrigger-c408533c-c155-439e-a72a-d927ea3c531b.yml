@@ -30,7 +30,7 @@ jobs:
         uses: azure/container-apps-deploy-action@v2
         with:
           appSourcePath: ${{ github.workspace }} 
-          registryUrl: hub.docker.com/layers/kaiannn/link-base-api/main/images/sha256-a1eaee822dde73d1f72ca2be929275bb497c013a97529bfa6a528e652e0beeb3?context=repo
+          registryUrl: docker.io
           registryUsername: ${{ secrets.LINKBASEAPI_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.LINKBASEAPI_REGISTRY_PASSWORD }}
           containerAppName: link-base-api
