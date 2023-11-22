@@ -35,7 +35,7 @@ jobs:
           registryPassword: ${{ secrets.LINKBASEAPI_REGISTRY_PASSWORD }}
           containerAppName: link-base-api
           resourceGroup: projects
-          imageToBuild: hub.docker.com/layers/kaiannn/link-base-api/main/images/sha256-a1eaee822dde73d1f72ca2be929275bb497c013a97529bfa6a528e652e0beeb3?context=repo/link-base-api:${{ github.sha }}
+          imageToBuild: kaiannn/link-base-api:${{ github.sha }}
           dockerfilePath: Dockerfile
 
      
