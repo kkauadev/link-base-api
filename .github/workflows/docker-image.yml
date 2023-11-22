@@ -28,24 +28,11 @@ jobs:
       with:
         images: kaiannn/link-base-api
 
-    - name: Use Node.js 14.x
-      uses: actions/setup-node@v2
+    - name: Build and push Docker image
+      uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
       with:
-        node-version: '14.x'
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build TypeScript
-      run: npm run build
-
-    - name: Build the Docker image
-      run: |
-        docker build . --file Dockerfile --tag link-base-api:latest
-
-    - name: Push Docker image to registry
-      run: |
-        docker push link-base-api:latest
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
